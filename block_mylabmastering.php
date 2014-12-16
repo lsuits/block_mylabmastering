@@ -141,7 +141,7 @@ class block_mylabmastering extends block_base {
 	    					}	    					
 	    				}
 	    				rebuild_course_cache($COURSE->id);
-	    				redirect($PAGE->url);	    				 
+	    				redirect($this->page->url);	    				 
 	    			}
 	    		}
 	    	}
@@ -158,7 +158,7 @@ class block_mylabmastering extends block_base {
 	    		mylabmastering_create_course_config($mm_config);	    		 
 	    		
 	    		rebuild_course_cache($COURSE->id);
-	    		redirect($PAGE->url);	    		 
+	    		redirect($this->page->url);	    		 
 	    	}    	
 	    	
 	    	$strHTML .= '<div id="'.'block_mylabmastering_tree'.'" >';

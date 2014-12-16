@@ -55,7 +55,7 @@ function mylabmastering_create_highlander_link($id, $url, $title) {
 	
 	$use_icons = $CFG->mylabmastering_use_icons;
 	if ($use_icons) {
-		$lti->icon = $CFG->wwwroot.'/blocks/mylabmastering/pix/icon.jpg';
+		$lti->icon = $CFG->wwwroot.'/blocks/mylabmastering/pix/icon.svg';
 	}	
 
 	$lti->id = $DB->insert_record('lti', $lti);
@@ -80,7 +80,8 @@ function mylabmastering_create_highlander_link($id, $url, $title) {
 	$cm->showavailability = 0;
 	$cm->showdescription = 0;
 	$cm->coursemodule = add_course_module($cm);
-	$sectionid = add_mod_to_section($cm);
+	$sectionid = course_add_cm_to_section($cm->course, $cm->coursemodule, $cm->section, NULL);
+        
 	$DB->set_field("course_modules", "section", $sectionid, array("id" => $cm->coursemodule));
 
 	return $lti->id;
@@ -109,7 +110,7 @@ function mylabmastering_update_course_config($config) {
 
 function mylabmastering_get_mapping($courseid) {
 	global $CFG;
-	
+$t = time();	
 	$curl = curl_init();
 	
 	$url = $CFG->mylabmastering_url;
@@ -119,14 +120,13 @@ function mylabmastering_get_mapping($courseid) {
 	curl_setopt($curl, CURLOPT_URL, $url);
 	curl_setopt($curl, CURLOPT_HEADER, false);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_SSLv3);
 	curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 	
 	$response = curl_exec($curl);
 	
 	$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-	
 	$retval = NULL;
-	
 	if (!curl_errno($curl) && ($status === 200)) {
 		$json = json_decode($response);
 		$product = new stdClass;
@@ -136,7 +136,6 @@ function mylabmastering_get_mapping($courseid) {
 		}
 		$retval = $product;
 	}
-	
 	curl_close($curl);
 	return $retval;	
 }
@@ -159,7 +158,6 @@ function mylabmastering_delete_highlander_link($id) {
 
 function mylabmastering_get_content_links($code) {
 	global $CFG;
-
 	$curl = curl_init();
 
 	$url = $CFG->mylabmastering_url;
@@ -169,14 +167,13 @@ function mylabmastering_get_content_links($code) {
 	curl_setopt($curl, CURLOPT_URL, $url);
 	curl_setopt($curl, CURLOPT_HEADER, false);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_SSLv3);
 	curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
 	$response = curl_exec($curl);
 
 	$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
 	$retval = NULL;
-
 	if (!curl_errno($curl) && ($status === 200)) {
 		$json = json_decode($response);
 		$product = new stdClass;
@@ -192,7 +189,6 @@ function mylabmastering_get_content_links($code) {
 
 function mylabmastering_get_tools_links($code) {
 	global $CFG;
-
 	$curl = curl_init();
 
 	$url = $CFG->mylabmastering_url;
@@ -202,14 +198,13 @@ function mylabmastering_get_tools_links($code) {
 	curl_setopt($curl, CURLOPT_URL, $url);
 	curl_setopt($curl, CURLOPT_HEADER, false);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_SSLv3);
 	curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
 	$response = curl_exec($curl);
 
 	$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
 	$retval = NULL;
-
 	if (!curl_errno($curl) && ($status === 200)) {
 		$json = json_decode($response);
 		$product = new stdClass;
@@ -296,7 +291,7 @@ function mylabmastering_create_lti_type($link, $courseid, $userid) {
 	
 	$use_icons = $CFG->mylabmastering_use_icons;
 	if ($use_icons) {
-		$ltitypeconfig->icon = $CFG->wwwroot.'/blocks/mylabmastering/pix/icon.jpg';
+		$ltitypeconfig->icon = $CFG->wwwroot.'/blocks/mylabmastering/pix/icon.svg';
 	}
 	
 	if ($ltitype->id) {
