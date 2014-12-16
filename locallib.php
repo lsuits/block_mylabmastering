@@ -110,7 +110,6 @@ function mylabmastering_update_course_config($config) {
 
 function mylabmastering_get_mapping($courseid) {
 	global $CFG;
-$t = time();	
 	$curl = curl_init();
 	
 	$url = $CFG->mylabmastering_url;
